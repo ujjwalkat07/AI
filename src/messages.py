@@ -31,3 +31,5 @@ while True:
         f.write(content[0].get("text"))
 
     print(content[0].get("text"))
+    print("------------------------------------------------------------")
+    print(messages)
