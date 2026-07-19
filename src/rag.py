@@ -38,3 +38,4 @@ while True:
     # Capture the content of the response
     content = response.content
     print(content[0].get("text"))
+    print("\n\n")
