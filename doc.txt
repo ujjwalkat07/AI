@@ -1,0 +1,140 @@
+Frequently used commands (uv edition)
+=======================
+
+Virtual environments
+--------------------
+- Create a venv (recommended name `.venv`):
+  uv venv
+- Activate (PowerShell):
+  .venv\Scripts\Activate.ps1
+- Activate (Command Prompt):
+  .venv\Scripts\activate.bat
+- Activate (WSL / Linux / macOS bash):
+  source .venv/bin/activate
+- Activate (Git Bash on Windows):
+  source .venv/Scripts/activate
+- Deactivate:
+  deactivate
+
+uv pip / package management
+----------------------------
+- Install from requirements file:
+  uv pip install -r requirements.txt
+  (Installs listed packages, much faster than pip.)
+- Force reinstall all listed packages:
+  uv pip install --reinstall -r requirements.txt
+- Upgrade packages to newest allowed versions:
+  uv pip install -U -r requirements.txt
+- Uninstall a package:
+  uv pip uninstall package_name
+- Uninstall multiple packages:
+  uv pip uninstall pkg1 pkg2
+- Uninstall from requirements file:
+  uv pip uninstall -r requirements.txt
+- Reinstall cleanly (uninstall then install):
+  uv pip uninstall -r requirements.txt && uv pip install -r requirements.txt
+- Install a specific version:
+  uv pip install package==1.2.3
+- Install editable package from local source (develop mode):
+  uv pip install -e .
+- Install without cache (useful when debugging):
+  uv pip install --no-cache package_name
+- Show installed packages:
+  uv pip list
+- Freeze exact versions (for requirements.txt):
+  uv pip freeze > requirements.txt
+- Show package info:
+  uv pip show package_name
+- Check dependency problems:
+  uv pip check
+- uv cache location:
+  uv cache dir
+- Clear uv cache:
+  uv cache clean
+
+Bulk / automation
+-----------------
+- Uninstall all installed packages (bash):
+  uv pip freeze | xargs uv pip uninstall
+- Uninstall all installed packages (PowerShell):
+  uv pip freeze | ForEach-Object { uv pip uninstall ($_.Split('==')[0]) }
+
+pipx (global per-user apps) — no uv equivalent, kept as-is
+------------------------------------------------------------
+- Install a CLI app with isolation:
+  pipx install package_name
+- Uninstall a pipx app:
+  pipx uninstall package_name
+- List pipx-installed apps:
+  pipx list
+Note: `uv tool install` is uv's own equivalent to pipx, e.g.:
+  uv tool install package_name
+  uv tool uninstall package_name
+  uv tool list
+
+Python tooling
+--------------
+- Run module as script via uv (consistent interpreter, no manual activation needed):
+  uv run python -m pip install package
+- Run tests with pytest:
+  uv run pytest
+- Format code with black:
+  uv run black src/ --line-length 88
+- Lint with flake8:
+  uv run flake8 src/
+
+Project / requirements workflow
+------------------------------
+- Create venv, activate, then install:
+  uv venv
+  source .venv/bin/activate
+  uv pip install -r requirements.txt
+- Update `requirements.txt` from current env:
+  uv pip freeze > requirements.txt
+
+Git common commands
+-------------------
+- Status:
+  git status
+- Add files and commit:
+  git add .
+  git commit -m "Your message"
+- Create and switch to branch:
+  git checkout -b feature/name
+- Push current branch:
+  git push -u origin HEAD
+- Pull latest changes:
+  git pull
+- Show recent commits:
+  git log --oneline --graph --decorate -n 20
+- Stash changes and reapply:
+  git stash
+  git stash pop
+
+Windows-specific notes
+----------------------
+- Use the venv activation script matching your shell (PowerShell vs cmd vs Git Bash).
+- If PowerShell blocks scripts, run:
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+- If `uv` is not found in PATH after `pip install uv`, add its Scripts folder to PATH
+  (e.g. C:\Users\<you>\AppData\Roaming\Python\Python3XX\Scripts) or run it via:
+  python -m uv --version
+
+Safety tips
+-----------
+- Prefer `uv pip` over bare `pip` for speed and reliable resolution.
+- Use a virtual environment per-project to avoid global package conflicts.
+- When in doubt, test installs in an isolated venv before global changes.
+
+Quick references
+----------------
+- Show Python executable path:
+  python -c "import sys; print(sys.executable)"
+- Show uv version:
+  uv --version
+- Show pip version (inside venv):
+  python -m pip --version
+- Check installed package version:
+  uv pip show package_name
+
+If you want additional sections (Docker, conda, CI commands, or CI/CD snippets), tell me which ones and I'll add them.
