@@ -9,36 +9,23 @@ from langchain_chroma import Chroma
 
 load_dotenv()
 
-# 1. Load
-# load document from pdf file and print the content of the first page of the document.
-# pdf_path = Path(__file__).resolve().parent / "ujjwal-resume.pdf"
-loader = PyPDFLoader("RAG/ujjwal-resume.pdf")
-documents = loader.load()
-# print(documents[0].page_content)
 
-# 2. Split
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20)
-texts = text_splitter.split_documents(documents)
-# print(f"Number of documents: {texts[0]}")
-# print(f"Number of chunks: {len(texts)}")
-
-# 3. Generate embeddings
+# 1. Generate embeddings for user query
 embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-2-preview")
 # vector = embeddings.embed_query(texts[0].page_content)
 # print(f"Embedding vector: {vector}")
 
-# 4. Store in vector database
+# 4. Retrieve from vector database
 # Here we are using Chroma as the vector database to store the embeddings. We are creating
 vector_store = Chroma(
     collection_name="rag-collection",
     embedding_function=embeddings,
     persist_directory="chroma-db",
 )
-vector_store.add_documents(documents=texts)
 
-# 5. Query/ Retrieve the documents from zthe vector database using a query. Here we are using the similarity_search method of the vector store to retrieve the documents that are similar to the query. The k parameter specifies the number of documents to retrieve.
+# 5. Query/ Retrieve the documents from the vector database using a query. Here we are using the similarity_search method of the vector store to retrieve the documents that are similar to the query. The k parameter specifies the number of documents to retrieve.
 
-# query again gets splittes into embeddings means again AI API COST
+# query again gets split into embeddings means again AI API COST
 # results = vector_store.similarity_search(
 #     "what is the skills of the person in the resume?",
 #     k=2,
@@ -77,10 +64,9 @@ while True:
 
     documents = retriever.invoke(question)
     # Use ALL retrieved chunks, not just the first one and make a list of chunks to pass to the prompt template. The context is created by joining the page content of all the retrieved documents with a separator.
-    context = "\n\n---\n\n".join(doc.page_content for doc in documents) 
+    context = "\n\n---\n\n".join(doc.page_content for doc in documents)
     print(f"Retrieved {len(documents)} documents for the question: '{question}'")
     print(f"Context: {context}\n\n")
-
 
     final_prompt = template.format_prompt(context=context, user_input=question)
 
