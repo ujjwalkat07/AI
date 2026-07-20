@@ -1,189 +1,107 @@
-The president of the United States is Joe Biden.Subject: AI Engineering Internship Inquiry – [Your Name]
+# RAG Architecture — Resume Q&A System
 
-Hi Ujjwal,
+A Retrieval-Augmented Generation (RAG) pipeline that lets a user ask natural-language questions about a PDF resume and get answers grounded only in that document.
 
-I’ve been following your work in AI and am very impressed by [mention one specific project or achievement]. 
+## 1. High-Level Flow
 
-I am currently [mention your current status, e.g., a final-year CS student] with a strong focus on machine learning and LLMs. I am writing to express my keen interest in an AI Engineering internship at your company. 
+```mermaid
+flowchart TD
+    A[PDF Resume] -->|PyPDFLoader| B[Raw Page Documents]
+    B -->|RecursiveCharacterTextSplitter| C[Text Chunks ~1000 chars]
+    C -->|GoogleGenerativeAIEmbeddings| D[Chunk Vectors]
+    D -->|add_documents| E[(Chroma Vector Store<br/>persisted on disk)]
 
-I’ve attached my resume and portfolio for your review. I would love the opportunity to contribute to your team and learn from your expertise. 
+    F[User Question] -->|embed query| G[Query Vector]
+    G -->|MMR similarity search| E
+    E -->|top-k relevant chunks| H[Retrieved Context]
 
-Do you have any availability for a brief chat this week?
-
-Best regards,
-
-[Your Name]
-[LinkedIn/Portfolio Link]Subject: AI Engineering Internship Inquiry – [Your Name]
-
-Hi [Recruiter Name],
-
-I am a [Your Year/Major] student at [University] with a strong focus on AI and machine learning. I’ve recently completed projects in [mention one tech, e.g., LLMs/Computer Vision] and am impressed by [Company Name]’s work in [mention a specific company achievement].
-
-I am eager to contribute as an AI Engineering intern this [Season/Year]. Do you have a moment to discuss potential openings or the best way to apply?
-
-My resume and portfolio are attached for your review. Thanks for your time and consideration!
-
-Best regards,
-
-[Your Name]
-[LinkedIn Profile/Portfolio Link]The capital of Australia is **Canberra**.The current president of the United States is **Joe Biden**.You haven't mentioned what you are referring to! 
-
-Could you please provide more context? For example, are you asking about:
-
-*   **A specific person, place, or thing** mentioned in a previous conversation?
-*   **A character** from a book or movie?
-*   **The name of a company or product?**
-
-Please let me know what you are looking for, and I will be happy to help!Kanpur is located in the northern Indian state of **Uttar Pradesh**.
-
-Here are a few key details about its location:
-*   **Geography:** It is situated on the banks of the **Ganges River**.
-*   **Regional Position:** It lies in the central part of Uttar Pradesh and is a major industrial and commercial hub of the state.
-*   **Proximity:** It is about 80–90 kilometers (roughly 50–55 miles) southwest of **Lucknow**, the state capital. 
-
-It is well-connected by rail and road to other major cities in India, such as Delhi (which is about 400 km away) and Allahabad (Prayagraj).**Makanpur** is located in the **Bilhaur tehsil** of the **Kanpur Nagar district** in Uttar Pradesh, India.
-
-Here are a few key details to help you locate it:
-
-*   **Geographic Context:** It is situated in the northwestern part of the Kanpur Nagar district, near the border with the Kannauj district.
-*   **Proximity to Major Roads:** It is located relatively close to the **G.T. Road (Grand Trunk Road / NH 34)**, which connects Kanpur to Delhi. It lies between the towns of Bilhaur and Shivrajpur.
-*   **Significance:** Makanpur is most famous for the **Dargah of Shah Madar** (a 15th-century Sufi saint). The annual "Urs" festival held at this Dargah is a significant event that attracts thousands of pilgrims from across India.
-*   **Distance:** It is roughly 60–70 kilometers away from Kanpur city.
-
-**How to reach:**
-*   **By Rail:** The nearest railway station is **Bilhaur (BLU)**, which is on the Kanpur-Farrukhabad line. From the station, you can take a local auto-rickshaw or taxi to reach Makanpur.
-*   **By Road:** You can reach it via private vehicle or state transport buses traveling along the Kanpur-Kannauj highway.
-
-If you are using Google Maps, searching for **"Makanpur Dargah, Uttar Pradesh"** will give you the most accurate directions.In Python, a `dict` (dictionary) is a built-in mapping type that stores data in key-value pairs. It is implemented as a highly optimized hash table.
-
-Below is an explanation of the methods and the internal structure.
-
----
-
-### 1. The Core Data Structure
-While you don't interact with the "fields" of a dictionary directly, it is important to understand its internal architecture:
-*   **Hash Table:** Keys must be **hashable** (immutable types like `str`, `int`, `tuple`).
-*   **Ordered:** Since Python 3.7+, dictionaries preserve insertion order.
-*   **Efficiency:** Average time complexity for lookups, insertions, and deletions is **O(1)**.
-
----
-
-### 2. Dict Methods
-Methods are categorized by their functionality.
-
-#### A. Modification & Access
-*   **`d.update(other)`**: Merges another dictionary or iterable of key-value pairs into `d`. Existing keys are overwritten.
-*   **`d.get(key, default)`**: Returns the value for `key`. If `key` doesn't exist, returns `default` (instead of raising a `KeyError`).
-*   **`d.setdefault(key, default)`**: If `key` exists, return its value. If not, insert `key` with `default` and return `default`.
-*   **`d.pop(key, default)`**: Removes `key` and returns its value. If not found, returns `default` (or raises `KeyError` if no default provided).
-*   **`d.popitem()`**: Removes and returns the **last inserted** (LIFO) key-value pair as a tuple.
-
-#### B. Views (Iterators)
-These methods return "dictionary views," which provide a dynamic window into the dictionary's contents.
-*   **`d.keys()`**: Returns a view object of all keys.
-*   **`d.values()`**: Returns a view object of all values.
-*   **`d.items()`**: Returns a view object of `(key, value)` tuples.
-
-#### C. Maintenance
-*   **`d.clear()`**: Removes all elements from the dictionary.
-*   **`d.copy()`**: Returns a **shallow copy** of the dictionary.
-*   **`d.fromkeys(iterable, value)`**: A static method to create a new dictionary from an iterable of keys, all set to the same `value`.
-
----
-
-### 3. Code Example: Practical Usage
-
-```python
-data = {"name": "Alice", "role": "Dev"}
-
-# 1. Safe access with .get()
-print(data.get("age", 25))  # Output: 25
-
-# 2. Update/Add
-data.update({"age": 30, "location": "NY"})
-
-# 3. setdefault (useful for initializing keys)
-# If 'projects' isn't there, create it as an empty list
-data.setdefault("projects", []).append("Project X")
-
-# 4. Iterating over items
-for key, value in data.items():
-    print(f"{key}: {value}")
-
-# 5. Removal
-data.pop("role")
+    H --> I[Prompt Template<br/>system + context + question]
+    F --> I
+    I -->|ChatGoogleGenerativeAI| J[LLM Answer]
+    J --> K[Printed to User]
 ```
 
----
+There are two distinct phases: **Indexing** (runs once) and **Query** (runs every time a question is asked).
 
-### 4. Developer Tips
+## 2. Phase 1 — Indexing (build the knowledge base)
 
-1.  **Avoid `in` checks before `get`**:
-    *   *Bad:* `if 'key' in d: val = d['key']`
-    *   *Good:* `val = d.get('key', default)`
-    *   *Why?* The "Good" approach performs a single hash lookup, whereas the "Bad" approach performs two.
+This happens once, before any question is asked, and is skipped on future runs if the vector store already has data.
 
-2.  **`setdefault` vs `defaultdict`**:
-    *   Use `setdefault` for one-off logic.
-    *   Use `collections.defaultdict` if you have a tight loop where you need to initialize keys frequently. It is significantly faster because it avoids the overhead of method calls inside the loop.
+| Step | Component | What it does |
+|---|---|---|
+| Load | `PyPDFLoader` | Extracts raw text from the PDF, one `Document` object per page |
+| Split | `RecursiveCharacterTextSplitter` | Breaks each page into ~1000-character chunks with 20-char overlap, so retrieval can return focused snippets instead of whole pages |
+| Embed | `GoogleGenerativeAIEmbeddings` (`gemini-embedding-2-preview`) | Converts each chunk's text into a high-dimensional vector that captures its meaning |
+| Store | `Chroma` vector store | Persists `(vector, text, metadata)` for every chunk to disk at `chroma-db/`, so it survives across script runs |
 
-3.  **Memory Efficiency**:
-    *   If you are creating millions of dictionaries, consider using `__slots__` in a class or `collections.namedtuple` if the keys are static, as dictionaries have a non-trivial memory overhead due to the underlying hash table structure.
+**Why split before embedding?** Embedding a whole page as one vector blurs together unrelated sections (e.g. "Skills" and "Education"). Smaller chunks mean each vector represents one focused idea, so similarity search can zero in on exactly the relevant paragraph.
 
-4.  **Dictionary Views are Live**:
-    *   `keys()`, `values()`, and `items()` are not lists; they are live views. If you modify the dictionary while iterating, you will trigger a `RuntimeError`. If you need to modify while iterating, iterate over a copy: `for k in list(d.keys()): ...`.To provide you with the most useful example, I have drafted a **professional outreach email** typical of a software developer reaching out to a project lead or potential client.
+## 3. Phase 2 — Query (answer a question)
 
-### The Email Template
+This runs every time the user types a question in the loop.
 
-**Subject:** Inquiry: Senior Python Developer for [Project Name]
+| Step | Component | What it does |
+|---|---|---|
+| Embed query | Same embedding model | Converts the user's question into a vector in the same vector space as the stored chunks |
+| Retrieve | `vector_store.as_retriever(search_type="mmr")` | Finds the top-`k` chunks whose vectors are closest to the query vector, using MMR to avoid returning near-duplicate chunks |
+| Assemble context | `"\n\n---\n\n".join(...)` | Merges the retrieved chunks into one string, separated clearly, to feed the LLM |
+| Prompt | `ChatPromptTemplate` | Wraps the context + question in a system instruction telling the model to answer *only* from the given context |
+| Generate | `ChatGoogleGenerativeAI` (`gemini-3.1-flash-lite`) | Produces a natural-language answer grounded in the retrieved chunks |
 
-Hi [Name],
+## 4. Why "Retrieval-Augmented"?
 
-I hope you’re having a productive week.
+Without retrieval, you'd have two bad options:
+- **Send the whole resume every time** — wastes tokens (cost), and breaks down entirely if the document is longer than the model's context window.
+- **Rely on the model's own knowledge** — it has never seen this specific resume, so it would hallucinate.
 
-I’ve been following [Company/Project Name]’s work in [mention specific field, e.g., fintech/data processing], and I am impressed by [specific detail]. I am a senior Python developer with extensive experience building scalable web applications using Django and FastAPI.
+RAG solves both: it searches a pre-indexed knowledge base for just the relevant pieces, then hands *only those pieces* to the LLM as grounding context. The model's job shrinks from "know everything" to "read this short excerpt and answer accurately."
 
-I’m reaching out to see if you are currently looking for assistance with [specific problem, e.g., optimizing your API performance or migrating to a microservices architecture].
+## 5. Component Reference
 
-You can view my portfolio here: [Link to GitHub/Portfolio]
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      INDEXING (once)                        │
+│                                                               │
+│  PDF ──► Loader ──► Splitter ──► Embedder ──► Vector Store   │
+│                                                               │
+└─────────────────────────────────────────────────────────────┘
 
-Are you open to a brief 10-minute call next Tuesday or Wednesday to discuss your current roadmap?
-
-Best regards,
-
-[Your Name]
-[Your Phone Number/LinkedIn Profile]
-
-***
-
-### Best Practices (Senior Developer Perspective)
-
-1.  **Personalization over Automation:** Never send a generic "Dear Sir/Madam." Mentioning a specific detail about their product proves you did your research and increases your reply rate significantly.
-2.  **Focus on Value, Not Just Skills:** Don't just list technologies (Python, SQL, AWS). Explain what you can *solve* for them. Business owners care about performance, cost-reduction, and speed-to-market.
-3.  **Low-Friction Call to Action (CTA):** Instead of asking "When are you free?", suggest specific days. It removes the cognitive load of them having to check their calendar for an open slot.
-4.  **Keep it Brief:** Decision-makers are busy. If they can’t read your email in under 30 seconds, they likely won’t read it at all.
-
-### Python Tip: Automating Emails
-If you need to send multiple emails programmatically, use Python’s built-in `smtplib` and `email.mime` modules. Here is a concise way to structure the sending logic:
-
-```python
-import smtplib
-from email.message import EmailMessage
-
-def send_email(subject, body, to_email):
-    msg = EmailMessage()
-    msg.set_content(body)
-    msg['Subject'] = subject
-    msg['From'] = "your_email@example.com"
-    msg['To'] = to_email
-
-    # Use an App Password for Gmail/Outlook
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-        smtp.login("your_email@example.com", "your_app_password")
-        smtp.send_message(msg)
-
-# Usage:
-# send_email("Collaboration", "Body text here...", "client@company.com")
+┌─────────────────────────────────────────────────────────────┐
+│                    QUERY (every question)                   │
+│                                                               │
+│  Question ──► Embedder ──► Retriever ──► Context             │
+│                                              │                │
+│                                              ▼                │
+│                          Prompt Template ──► LLM ──► Answer  │
+│                                ▲                              │
+│                          Question                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-*Note: If you are sending automated emails at scale, I strongly recommend using professional APIs like **SendGrid**, **Mailgun**, or **Postmark** to ensure your emails don't end up in spam folders.*
+## 6. Tech Stack
+
+| Layer | Technology |
+|---|---|
+| PDF parsing | `langchain_community.document_loaders.PyPDFLoader` |
+| Chunking | `langchain_text_splitters.RecursiveCharacterTextSplitter` |
+| Embeddings | Google `gemini-embedding-2-preview` via `langchain_google_genai` |
+| Vector store | `Chroma` (`langchain_chroma`), persisted to local disk |
+| Retrieval strategy | MMR (Maximal Marginal Relevance) — balances relevance with diversity across returned chunks |
+| LLM | Google `gemini-3.1-flash-lite` via `langchain_google_genai` |
+| Orchestration | LangChain (`ChatPromptTemplate`, message formatting) |
+
+## 7. Cost Touchpoints
+
+Two operations hit the paid API:
+
+1. **Embedding** — once at indexing time (all chunks), plus once per question (query embedding). Cheap: `gemini-embedding-2-preview` is $0.20/1M tokens.
+2. **Generation** — once per question, billed on input (context + question) and output (answer) tokens. `gemini-3.1-flash-lite` is $0.25/1M input, $1.50/1M output.
+
+Indexing cost is paid once (skipped on reruns if the store is already populated); generation cost scales linearly with the number of questions asked.
+
+## 8. Possible Extensions
+
+- **Multi-document support** — index multiple resumes/PDFs into the same or separate collections, filter by `metadata` at query time.
+- **Source citations** — return `doc.metadata["page"]` alongside the answer so the user can see which page it came from.
+- **Conversation memory** — carry prior Q&A turns into the prompt so follow-up questions ("what about his most recent role?") resolve correctly.
+- **Streaming responses** — use `model.stream()` instead of `model.invoke()` for token-by-token output in the terminal.
